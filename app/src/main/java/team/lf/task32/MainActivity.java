@@ -1,5 +1,6 @@
 package team.lf.task32;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,6 +9,9 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity implements SampleAdapter.Callback {
@@ -55,7 +59,20 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
         animator.setRepeatCount(1);
         animator.addUpdateListener(valueAnimator -> view.setVisibility(View.VISIBLE));
         animator.start();
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        item.setOnMenuItemClickListener(menuItem -> {
+            ((SampleAdapter)mAdapter).addItem();
+            return false;
+        });
+        return super.onOptionsItemSelected(item);
+    }
 }
