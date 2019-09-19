@@ -80,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
                 break;
             }
             case R.id.remove_item: {
-                mAdapter.removeItem();
+                if (mAdapter.getItemCount() > 0)
+                    mAdapter.removeItem();
                 break;
             }
 
