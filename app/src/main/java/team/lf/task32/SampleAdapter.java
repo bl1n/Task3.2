@@ -35,9 +35,10 @@ class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleViewHolder>
 
     void addItem() {
         Random r = new Random();
-        int position = mDataset.size();
-        mDataset.add("Item " + r.nextInt(100));
-        notifyItemInserted(position);
+        int size = mDataset.size();
+        String element = "Item " + r.nextInt(100);
+        mDataset.add(size, element);
+        notifyItemInserted(size);
     }
 
 
@@ -58,17 +59,22 @@ class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleViewHolder>
 
 
     @Override
+    public void onViewAttachedToWindow(@NonNull SampleViewHolder holder) {
+
+        super.onViewAttachedToWindow(holder);
+    }
+
+    @Override
     public int getItemCount() {
         return mDataset.size();
     }
-
 
     void changeItemNumber(int position) {
         int number = new Random().nextInt(100);
         mDataset.set(position, "Item " + number);
         notifyItemChanged(position);
-    }
 
+    }
 
     static class SampleViewHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
