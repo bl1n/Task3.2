@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 
 public class MainActivity extends AppCompatActivity implements SampleAdapter.Callback {
 
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
         mRecyclerView.setAdapter(mAdapter);
         mItemAnimator = new SampleItemAnimator();
         mRecyclerView.setItemAnimator(mItemAnimator);
-
+        recyclerMove(mRecyclerView);
 
 
     }
@@ -41,8 +43,18 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
         int itemPosition = mRecyclerView.getChildAdapterPosition(view);
         if (itemPosition != RecyclerView.NO_POSITION) {
             ((SampleAdapter) mAdapter).changeItemNumber(itemPosition);
-
         }
+    }
+
+    public void recyclerMove(View view) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float width = displayMetrics.widthPixels / displayMetrics.density;
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX",-width*2,0f );
+        animator.setDuration(1000);
+        animator.setRepeatCount(1);
+        animator.addUpdateListener(valueAnimator -> view.setVisibility(View.VISIBLE));
+        animator.start();
 
     }
 

@@ -76,9 +76,9 @@ public class SampleItemAnimator extends DefaultItemAnimator {
         });
 
         AnimatorSet textAnim = new AnimatorSet();
+        textAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         textAnim.playSequentially(oldTextMove, newTextMove);
         AnimatorSet overallAnim = new AnimatorSet();
-        overallAnim.setInterpolator(new AccelerateDecelerateInterpolator());
         overallAnim.setDuration(1000).playTogether(tcAnim, textAnim);
         overallAnim.addListener(new AnimatorListenerAdapter() {
 
