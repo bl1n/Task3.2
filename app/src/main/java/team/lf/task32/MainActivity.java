@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
 
 
     @Override
-
     public void onItemClick(View view) {
         int itemPosition = mRecyclerView.getChildAdapterPosition(view);
         if (itemPosition != RecyclerView.NO_POSITION) {
@@ -74,8 +73,18 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        mAdapter.addItem();
-        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+        switch (item.getItemId()) {
+            case R.id.add_item: {
+                mAdapter.addItem();
+                mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+                break;
+            }
+            case R.id.remove_item: {
+                mAdapter.removeItem();
+                break;
+            }
+
+        }
 
 
         return super.onOptionsItemSelected(item);

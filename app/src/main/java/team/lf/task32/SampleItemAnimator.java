@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import androidx.annotation.NonNull;
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.FlingAnimation;
 import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
@@ -58,6 +60,7 @@ public class SampleItemAnimator extends DefaultItemAnimator {
         int width = holder.itemView.getWidth();
         final TextInfo preColorTextInfo = (TextInfo) preInfo;
         final TextInfo postColorTextInfo = (TextInfo) postInfo;
+
         int currentTextColor = holder.mTextView.getResources().getColor(R.color.colorPrimary);
         ObjectAnimator fadeToTransparent = ObjectAnimator.ofArgb(holder.mTextView, "textColor", currentTextColor, Color.TRANSPARENT);
         ObjectAnimator fadeFromTransparent = ObjectAnimator.ofArgb(holder.mTextView, "textColor", Color.TRANSPARENT, currentTextColor);
@@ -122,9 +125,29 @@ public class SampleItemAnimator extends DefaultItemAnimator {
 
     @Override
     public boolean animateRemove(RecyclerView.ViewHolder holder) {
+        View view = holder.itemView;
+        FlingAnimation animation = new FlingAnimation(view, DynamicAnimation.TRANSLATION_Y);
+        animation.addEndListener((animation1, canceled, value, velocity) -> {
+            ObjectAnimator setAlpha = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f);
+            setAlpha.setDuration(1000);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(holder.itemView, View.SCALE_X, 0, 10f);
+            scaleX.setDuration(500);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(holder.itemView, View.SCALE_Y, 0, 10f);
+            scaleY.setDuration(500);
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(scaleX,scaleY, setAlpha);
+            set.start();
 
-        return super.animateRemove(holder);
+        });
+        animation.setStartVelocity(5000f)
+                .setMinValue(0f)
+                .setFriction(1.2f)
+                .start();
+
+        return true;
     }
+
+
 
     private class TextInfo extends ItemHolderInfo {
         private String text;
