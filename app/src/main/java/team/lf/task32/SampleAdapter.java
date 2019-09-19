@@ -41,6 +41,11 @@ class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleViewHolder>
         notifyItemInserted(size);
     }
 
+    void removeItem(){
+        mDataset.remove(0);
+        notifyItemRemoved(0);
+    }
+
 
     @NonNull
     @Override
