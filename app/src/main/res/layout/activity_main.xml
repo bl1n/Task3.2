@@ -12,12 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
-        android:visibility="invisible"/>
-
-
+        android:animateLayoutChanges="false"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

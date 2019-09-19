@@ -1,5 +1,6 @@
 package team.lf.task32;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,14 +9,21 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.TranslateAnimation;
 
 public class MainActivity extends AppCompatActivity implements SampleAdapter.Callback {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.ItemAnimator mItemAnimator;
+    private SampleAdapter mAdapter;
 
 
     @Override
@@ -25,12 +33,12 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.recycler);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new SampleAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
-        mItemAnimator = new SampleItemAnimator();
-        mRecyclerView.setItemAnimator(mItemAnimator);
+        RecyclerView.ItemAnimator itemAnimator = new SampleItemAnimator();
+        mRecyclerView.setItemAnimator(itemAnimator);
         recyclerMove(mRecyclerView);
 
 
@@ -42,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
     public void onItemClick(View view) {
         int itemPosition = mRecyclerView.getChildAdapterPosition(view);
         if (itemPosition != RecyclerView.NO_POSITION) {
-            ((SampleAdapter) mAdapter).changeItemNumber(itemPosition);
+            mAdapter.changeItemNumber(itemPosition);
         }
     }
 
@@ -50,12 +58,26 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         float width = displayMetrics.widthPixels / displayMetrics.density;
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX",-width*2,0f );
-        animator.setDuration(1000);
-        animator.setRepeatCount(1);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", -width * 2, 0f);
+        animator.setDuration(2000);
         animator.addUpdateListener(valueAnimator -> view.setVisibility(View.VISIBLE));
+        animator.setInterpolator(new AnticipateOvershootInterpolator());
         animator.start();
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        mAdapter.addItem();
+        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+
+
+        return super.onOptionsItemSelected(item);
+    }
 }

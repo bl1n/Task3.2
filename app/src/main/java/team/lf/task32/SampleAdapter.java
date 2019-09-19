@@ -14,122 +14,80 @@ import java.util.Random;
 
 class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.SampleViewHolder> {
 
-
     private Callback mCallback;
-
     private ArrayList<String> mDataset;
 
 
-    public SampleAdapter(Context context) {
-
+    SampleAdapter(Context context) {
         mDataset = dataset();
-
-
         if (context instanceof Callback) {
-
             mCallback = (Callback) context;
-
         }
-
     }
 
-
     private ArrayList<String> dataset() {
-
         ArrayList<String> list = new ArrayList<>();
-
         for (int i = 1; i <= 5; i++) {
-
             list.add("Item " + i);
-
         }
-
-
         return list;
+    }
 
+    void addItem() {
+        Random r = new Random();
+        int size = mDataset.size();
+        String element = "Item " + r.nextInt(100);
+        mDataset.add(size, element);
+        notifyItemInserted(size);
     }
 
 
     @NonNull
-
     @Override
-
     public SampleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-
         TextView textView = (TextView) LayoutInflater.from(parent.getContext())
-
                 .inflate(R.layout.item_holder, parent, false);
-
-        textView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-
-            public void onClick(View v) {
-
-                mCallback.onItemClick(v);
-
-            }
-
-        });
-
-
+        textView.setOnClickListener(v -> mCallback.onItemClick(v));
         return new SampleViewHolder(textView);
-
     }
 
 
     @Override
-
     public void onBindViewHolder(@NonNull SampleViewHolder holder, int position) {
-
         holder.mTextView.setText(mDataset.get(position));
-
     }
 
 
     @Override
+    public void onViewAttachedToWindow(@NonNull SampleViewHolder holder) {
 
-    public int getItemCount() {
-
-        return mDataset.size();
-
+        super.onViewAttachedToWindow(holder);
     }
 
+    @Override
+    public int getItemCount() {
+        return mDataset.size();
+    }
 
-    public void changeItemNumber(int position) {
-
+    void changeItemNumber(int position) {
         int number = new Random().nextInt(100);
-
         mDataset.set(position, "Item " + number);
-
         notifyItemChanged(position);
 
     }
 
-
     static class SampleViewHolder extends RecyclerView.ViewHolder {
+        TextView mTextView;
 
-
-        public TextView mTextView;
-
-
-        public SampleViewHolder(TextView textView) {
-
+        SampleViewHolder(TextView textView) {
             super(textView);
-
             mTextView = textView;
-
         }
-
     }
 
 
     interface Callback {
-
-
         void onItemClick(View view);
-
     }
 
 }

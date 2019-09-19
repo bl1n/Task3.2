@@ -7,9 +7,11 @@ import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
 
 import androidx.annotation.NonNull;
+import androidx.dynamicanimation.animation.FloatPropertyCompat;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -94,6 +96,35 @@ public class SampleItemAnimator extends DefaultItemAnimator {
         return super.animateChange(oldHolder, newHolder, preInfo, postInfo);
     }
 
+    @Override
+    public boolean animateAdd(RecyclerView.ViewHolder holder) {
+            View view = holder.itemView;
+            SpringAnimation animation = new SpringAnimation(view, new FloatPropertyCompat<View>("translationY") {
+                @Override
+                public float getValue(View object) {
+                    return view.getTranslationY();
+                }
+
+                @Override
+                public void setValue(View object, float value) {
+
+                    view.setTranslationY(value);
+                }
+            });
+            SpringForce force = new SpringForce(0f);
+            force.setStiffness(SpringForce.STIFFNESS_MEDIUM);
+            force.setDampingRatio(SpringForce.DAMPING_RATIO_HIGH_BOUNCY);
+            animation.setSpring(force);
+            view.setY(300);
+            animation.start();
+        return super.animateAdd(holder);
+    }
+
+    @Override
+    public boolean animateRemove(RecyclerView.ViewHolder holder) {
+
+        return super.animateRemove(holder);
+    }
 
     private class TextInfo extends ItemHolderInfo {
         private String text;
