@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 
 public class MainActivity extends AppCompatActivity implements SampleAdapter.Callback {
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements SampleAdapter.Cal
         animator.setDuration(1000);
         animator.setRepeatCount(1);
         animator.addUpdateListener(valueAnimator -> view.setVisibility(View.VISIBLE));
+        animator.setInterpolator(new BounceInterpolator());
         animator.start();
     }
 
